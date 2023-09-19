@@ -393,7 +393,7 @@ class CrunchyrollBetaIE(CrunchyrollCmsBaseIE):
                 },{
                     'title': 'Episode',
                     'start_time': intro_end,
-                    'end_time': float_or_none(result['duration']),
+                    'end_time': result['duration'],
 
                 }]
             else:
@@ -408,7 +408,7 @@ class CrunchyrollBetaIE(CrunchyrollCmsBaseIE):
                 },{
                     'title': 'Episode',
                     'start_time': intro_end,
-                    'end_time': float_or_none(result['duration']),
+                    'end_time': result['duration'],
 
                 }]
 
