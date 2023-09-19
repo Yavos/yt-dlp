@@ -379,11 +379,39 @@ class CrunchyrollBetaIE(CrunchyrollCmsBaseIE):
             f'https://static.crunchyroll.com/datalab-intro-v2/{internal_id}.json',
             internal_id, note='Downloading chapter info', fatal=False, errnote=False)
         if isinstance(intro_chapter, dict):
-            result['chapters'] = [{
-                'title': 'Intro',
-                'start_time': float_or_none(intro_chapter.get('startTime')),
-                'end_time': float_or_none(intro_chapter.get('endTime')),
-            }]
+            # Since yt-dlp automatically creates chapters before the given chapters if they don't start
+            # at 0, we wanna catch that and also add a following chapter, so players can actually use them
+            intro_start = float_or_none(intro_chapter.get('startTime'))
+            intro_end = float_or_none(intro_chapter.get('endTime'))
+            if intro_start < 1.0:
+                # If a chapter starts at a fraction of a second, just ignore that
+                intro_start = 0.0
+                result['chapters'] = [{
+                    'title': 'Intro',
+                    'start_time': intro_start,
+                    'end_time': intro_end,
+                },{
+                    'title': 'Episode',
+                    'start_time': intro_end,
+                    'end_time': float_or_none(result['duration']),
+
+                }]
+            else:
+                result['chapters'] = [{
+                    'title': 'Pre-Intro',
+                    'start_time': 0.0,
+                    'end_time': intro_start,
+                },{
+                    'title': 'Intro',
+                    'start_time': intro_start,
+                    'end_time': intro_end,
+                },{
+                    'title': 'Episode',
+                    'start_time': intro_end,
+                    'end_time': float_or_none(result['duration']),
+
+                }]
+
 
         def calculate_count(item):
             return parse_count(''.join((item['displayed'], item.get('unit') or '')))
