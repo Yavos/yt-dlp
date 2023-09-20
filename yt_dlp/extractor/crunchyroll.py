@@ -390,7 +390,7 @@ class CrunchyrollBetaIE(CrunchyrollCmsBaseIE):
                     'title': 'Intro',
                     'start_time': intro_start,
                     'end_time': intro_end,
-                },{
+                }, {
                     'title': 'Episode',
                     'start_time': intro_end,
                     'end_time': result['duration'],
@@ -401,17 +401,16 @@ class CrunchyrollBetaIE(CrunchyrollCmsBaseIE):
                     'title': 'Pre-Intro',
                     'start_time': 0.0,
                     'end_time': intro_start,
-                },{
+                }, {
                     'title': 'Intro',
                     'start_time': intro_start,
                     'end_time': intro_end,
-                },{
+                }, {
                     'title': 'Episode',
                     'start_time': intro_end,
                     'end_time': result['duration'],
 
                 }]
-
 
         def calculate_count(item):
             return parse_count(''.join((item['displayed'], item.get('unit') or '')))
